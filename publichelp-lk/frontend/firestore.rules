@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Each user's own profile (full name, NIC, phone, preferred language).
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      // Per-user saved progress on a passport case (steps + documents ticked).
+      match /journeys/{caseId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    // Anonymous/best-effort assistant question log: write-only, never readable by clients.
+    match /questions/{id} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+  }
+}
