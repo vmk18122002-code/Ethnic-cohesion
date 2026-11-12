@@ -1,14 +1,19 @@
 import { Router } from 'express';
 import { db } from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
-import { cases } from '../data/passport.js';
+import { cases as passportCases } from '../data/passport.js';
+import { cases as birthCases } from '../data/birth.js';
 
-// A "journey" is a citizen's personal progress through one passport case:
+// A "journey" is a citizen's personal progress through one case (passport or birth certificate):
 // which steps they have completed and which documents they have ready.
 const router = Router();
 router.use(requireAuth);
 
-const caseById = (id) => cases.find((c) => c.id === id);
+const allCases = [
+  ...passportCases.map((c) => ({ ...c, service: 'passport' })),
+  ...birthCases.map((c) => ({ ...c, service: 'birth' })),
+];
+const caseById = (id) => allCases.find((c) => c.id === id);
 
 function shape(row) {
   const c = caseById(row.case_id);
@@ -18,6 +23,7 @@ function shape(row) {
   const done = steps.filter(Boolean).length + docs.filter(Boolean).length;
   return {
     caseId: row.case_id,
+    service: c.service,
     number: c.number,
     title: c.title,
     steps,
