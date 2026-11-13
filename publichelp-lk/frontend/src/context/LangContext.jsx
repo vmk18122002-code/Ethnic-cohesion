@@ -43,8 +43,8 @@ const STRINGS = {
     stepWord: 'STEP',
     safetyNote: 'Safety rule: if official evidence is missing or unclear, we say so and direct you to the responsible agency — never a guess.',
 
-    servicesEyebrow: 'Services', servicesTitle: 'Passports and driving licences are live. Growing to every common task.',
-    servicesBody: 'Target scope: 10–20 common government-service tasks, each tested against a human-verified answer key. Passports and driving licences are live now.',
+    servicesEyebrow: 'Services', servicesTitle: 'Starting with passports. Growing to every common task.',
+    servicesBody: 'Initial scope: 10–20 common government-service tasks, each tested against a human-verified answer key.',
     services: [
       { title: 'Passport services', text: '15 verified cases: new, urgent, child, lost, overseas, amendments and more.', live: true },
       { title: 'Driving licence', text: "Learner's permit, new licence, renewal, lost licence and international permit.", live: true },
@@ -197,8 +197,8 @@ const STRINGS = {
     stepWord: 'පියවර',
     safetyNote: 'ආරක්ෂණ රීතිය: නිල සාක්ෂි නොමැති හෝ අපැහැදිලි නම්, අපි එය පවසා වගකිව යුතු ආයතනය වෙත යොමු කරමු — කිසි විටෙකත් අනුමාන නොකරමු.',
 
-    servicesEyebrow: 'සේවා', servicesTitle: 'ගමන් බලපත්‍ර සහ රියදුරු බලපත්‍ර දැන් සජීවීයි. සෑම පොදු කාර්යයක් සඳහාම වර්ධනය වේ.',
-    servicesBody: 'ඉලක්ක විෂය පථය: පොදු රජයේ-සේවා කාර්යයන් 10–20ක්, එක් එක් මනුෂ්‍ය-සත්‍යාපිත පිළිතුරු යතුරකට එරෙහිව පරීක්ෂා කර ඇත. ගමන් බලපත්‍ර සහ රියදුරු බලපත්‍ර දැන් සජීවීයි.',
+    servicesEyebrow: 'සේවා', servicesTitle: 'ගමන් බලපත්‍ර වලින් ආරම්භ වේ. සෑම පොදු කාර්යයක් සඳහාම වර්ධනය වේ.',
+    servicesBody: 'මූලික විෂය පථය: පොදු රජයේ-සේවා කාර්යයන් 10–20ක්, එක් එක් මනුෂ්‍ය-සත්‍යාපිත පිළිතුරු යතුරකට එරෙහිව පරීක්ෂා කර ඇත.',
     services: [
       { title: 'ගමන් බලපත්‍ර සේවා', text: 'සත්‍යාපිත අවස්ථා 15ක්: නව, හදිසි, ළමා, නැතිවූ, විදේශ, සංශෝධන සහ තවත්.', live: true },
       { title: 'රියදුරු බලපත්‍රය', text: 'ඉගෙනුම් බලපත්‍රය, නව බලපත්‍රය, අලුත් කිරීම, නැතිවූ බලපත්‍රය සහ ජාත්‍යන්තර බලපත්‍රය.', live: true },
@@ -338,8 +338,8 @@ const STRINGS = {
     stepWord: 'படி',
     safetyNote: 'பாதுகாப்பு விதி: அதிகாரபூர்வ ஆதாரம் இல்லாவிட்டாலோ அல்லது தெளிவில்லாவிட்டாலோ, நாங்கள் அதைக் கூறி பொறுப்பான நிறுவனத்திற்கு வழிகாட்டுவோம் — ஒருபோதும் யூகிக்க மாட்டோம்.',
 
-    servicesEyebrow: 'சேவைகள்', servicesTitle: 'கடவுச்சீட்டு மற்றும் ஓட்டுநர் உரிமம் இப்போது செயலில். ஒவ்வொரு பொதுவான பணிக்கும் வளர்கிறது.',
-    servicesBody: 'இலக்கு நோக்கம்: 10–20 பொதுவான அரசு-சேவை பணிகள், ஒவ்வொன்றும் மனித-சரிபார்க்கப்பட்ட பதில் திறவுகோலுக்கு எதிராக சோதிக்கப்பட்டது. கடவுச்சீட்டு மற்றும் ஓட்டுநர் உரிமம் இப்போது செயலில் உள்ளன.',
+    servicesEyebrow: 'சேவைகள்', servicesTitle: 'கடவுச்சீட்டுகளில் தொடங்குகிறது. ஒவ்வொரு பொதுவான பணிக்கும் வளர்கிறது.',
+    servicesBody: 'ஆரம்ப நோக்கம்: 10–20 பொதுவான அரசு-சேவை பணிகள், ஒவ்வொன்றும் மனித-சரிபார்க்கப்பட்ட பதில் திறவுகோலுக்கு எதிராக சோதிக்கப்பட்டது.',
     services: [
       { title: 'கடவுச்சீட்டு சேவைகள்', text: '15 சரிபார்க்கப்பட்ட வழக்குகள்: புதிய, அவசர, குழந்தை, தொலைந்த, வெளிநாட்டு, திருத்தங்கள் மற்றும் பல.', live: true },
       { title: 'ஓட்டுநர் உரிமம்', text: 'கற்றல் உரிமம், புதிய உரிமம், புதுப்பித்தல், தொலைந்த உரிமம் மற்றும் சர்வதேச உரிமம்.', live: true },

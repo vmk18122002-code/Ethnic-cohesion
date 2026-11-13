@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import {
-  ArrowRight, Sparkles, MessageSquareText, Languages, Database, ListOrdered,
-  Landmark, Check, X, ShieldAlert, ShieldCheck, Link2, CreditCard, Car, BookOpen, Baby, Scale, Users, Send, CalendarCheck, Search,
+  ArrowRight, BadgePlus, Baby, SearchX, Plane, Sparkles, MessageSquareText, Languages, Database, ListOrdered,
+  Landmark, Check, X, ShieldAlert, ShieldCheck, Link2, CreditCard, Car, BookOpen, Scale, Users, Send, CalendarCheck, Search,
 } from 'lucide-react';
 import { HelpFab, LangSwitch, Logo, Reveal, fadeUp, stagger } from '../components/ui.jsx';
 import PassportArt from '../components/PassportArt.jsx';
 import { useLang } from '../context/LangContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+
+const QUICK = [
+  { key: 'newPassport', icon: BadgePlus, to: '/app/cases?category=new' },
+  { key: 'child', icon: Baby, to: '/app/cases?category=child' },
+  { key: 'lost', icon: SearchX, to: '/app/cases?category=lost' },
+  { key: 'abroad', icon: Plane, to: '/app/cases?category=abroad' },
+];
 
 const JOURNEY_ICONS = [MessageSquareText, Languages, Database, ListOrdered, Landmark];
 const SERVICE_ICONS = [BookOpen, Car, Baby, CreditCard, ShieldCheck, Scale];
@@ -85,43 +92,25 @@ export default function Landing() {
         <div className="container hero-inner">
           <motion.div variants={stagger(0.12)} initial="hidden" animate="show">
             <motion.span variants={fadeUp} className="pill pill-dark"><Sparkles size={13} /> {t('tagline')} · SDG 16</motion.span>
-            <motion.h1 variants={fadeUp}><span className="gradient-text">{t('chooseService')}</span></motion.h1>
-            <motion.p variants={fadeUp} className="hero-sub">{t('chooseServiceSub')}</motion.p>
+            <motion.h1 variants={fadeUp}><span className="gradient-text">{t('heroTitle')}</span></motion.h1>
+            <motion.p variants={fadeUp} className="hero-sub">{t('heroSub')}</motion.p>
 
-            <motion.div variants={stagger(0.08)} style={{ display: 'grid', gap: 14, marginTop: 28, maxWidth: 520 }}>
-              <motion.div variants={fadeUp}>
-                <Link to="/app/cases" className="card service-card live hover-lift" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '20px 22px' }}>
-                  <div className="icon-tile solid" style={{ flexShrink: 0 }}><BookOpen size={24} /></div>
-                  <div className="grow">
-                    <div className="row" style={{ justifyContent: 'space-between' }}>
-                      <h3 style={{ fontSize: 18, margin: 0 }}>{t('servicePassport')}</h3>
-                      <span className="pill pill-dark">{t('liveTag')}</span>
-                    </div>
-                    <p className="muted small mt-8" style={{ margin: '6px 0 0' }}>{t('servicePassportDesc')}</p>
-                  </div>
-                  <ArrowRight size={18} />
-                </Link>
-              </motion.div>
-              <motion.div variants={fadeUp}>
-                <Link to="/app/license" className="card service-card live hover-lift" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '20px 22px' }}>
-                  <div className="icon-tile solid" style={{ flexShrink: 0 }}><Car size={24} /></div>
-                  <div className="grow">
-                    <div className="row" style={{ justifyContent: 'space-between' }}>
-                      <h3 style={{ fontSize: 18, margin: 0 }}>{t('serviceLicense')}</h3>
-                      <span className="pill pill-dark">{t('liveTag')}</span>
-                    </div>
-                    <p className="muted small mt-8" style={{ margin: '6px 0 0' }}>{t('serviceLicenseDesc')}</p>
-                  </div>
-                  <ArrowRight size={18} />
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            <motion.form variants={fadeUp} className="ask-bar" style={{ marginTop: 20 }} onSubmit={ask}>
+            <motion.form variants={fadeUp} className="ask-bar" onSubmit={ask}>
               <Search size={18} color="#7d869c" style={{ alignSelf: 'center', marginLeft: 8 }} />
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('askPlaceholder')} aria-label="Ask a question" />
               <button className="btn btn-primary" type="submit"><Send size={16} /> {t('askBtn')}</button>
             </motion.form>
+
+            <motion.div variants={stagger(0.08)} className="quick-grid">
+              {QUICK.map((qb) => (
+                <motion.div key={qb.key} variants={fadeUp}>
+                  <Link to={qb.to} className="quick-btn">
+                    <span className="qi"><qb.icon size={19} /></span>
+                    {t(qb.key)}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
           <div className="hero-visual"><PassportArt /></div>
         </div>
@@ -264,6 +253,14 @@ export default function Landing() {
               <div><h3 style={{ fontSize: 19 }}>{t('sdg10Title')}</h3><p style={{ color: 'var(--muted-dark)', marginTop: 8 }}>{t('sdg10Body')}</p></div>
             </Reveal>
           </div>
+          <Reveal className="cta mt-32" delay={0.1}>
+            <h2>{t('ctaTitle')}</h2>
+            <p>{t('ctaBody')}</p>
+            <div className="row" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link to={user ? '/app' : '/signup'} className="btn btn-white btn-lg">{t('getStarted')} <ArrowRight size={17} /></Link>
+              <a href="tel:1962" className="btn btn-ghost-dark btn-lg">{t('notClear')}</a>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -275,9 +272,8 @@ export default function Landing() {
               <p className="mt-16" style={{ maxWidth: 340 }}>{t('footerTagline')}</p>
             </div>
             <div><h5>{t('footerPassport')}</h5><ul><li><Link to="/app/cases">{t('footerAllCases')}</Link></li><li><Link to="/app/fees">{t('footerFeeCalc')}</Link></li><li><Link to="/app/forms">{t('footerForms')}</Link></li></ul></div>
-            <div><h5>{t('serviceLicense')}</h5><ul><li><Link to="/app/license/cases">{t('footerAllCases')}</Link></li><li><Link to="/app/license/fees">{t('footerFeeCalc')}</Link></li><li><Link to="/app/license/offices">{t('navOffices')}</Link></li></ul></div>
             <div><h5>{t('footerHelp')}</h5><ul><li><a href="tel:1962">{t('footerHotline')}</a></li><li><Link to="/app/offices">{t('footerOffices')}</Link></li><li><Link to="/app/contacts">{t('footerContacts')}</Link></li></ul></div>
-            <div><h5>{t('footerOfficial')}</h5><ul><li><a href="https://www.immigration.gov.lk" target="_blank" rel="noreferrer">immigration.gov.lk</a></li><li><a href="https://www.dmt.gov.lk" target="_blank" rel="noreferrer">dmt.gov.lk</a></li><li><a href="https://www.gov.lk" target="_blank" rel="noreferrer">gov.lk</a></li></ul></div>
+            <div><h5>{t('footerOfficial')}</h5><ul><li><a href="https://www.immigration.gov.lk" target="_blank" rel="noreferrer">immigration.gov.lk</a></li><li><a href="https://www.gov.lk" target="_blank" rel="noreferrer">gov.lk</a></li><li><a href="https://mfa.gov.lk/sri-lanka-missions" target="_blank" rel="noreferrer">{t('footerMissions')}</a></li></ul></div>
           </div>
           <div className="footer-bottom">
             <span>{t('footerBottom')}</span>
