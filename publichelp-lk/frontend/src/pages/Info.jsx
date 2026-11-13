@@ -54,9 +54,9 @@ export function Forms() {
   );
 }
 
-export function Offices() {
+export function Offices({ apiPrefix = '/passport', missionsNote = true }) {
   const { t, lang } = useLang();
-  const [data, error] = useData('/passport/offices', lang);
+  const [data, error] = useData(`${apiPrefix}/offices`, lang);
   if (error) return <Page><div className="alert alert-error">{error}</div></Page>;
   if (!data) return <Loader />;
   const { offices } = data;
@@ -68,36 +68,51 @@ export function Offices() {
         <h2>{offices.headOffice.name}</h2>
         <p className="row gap-8"><MapPin size={16} /> {offices.headOffice.address}</p>
         <div className="detail-facts">{offices.headOffice.notes.map((n) => <div key={n}><b>{n}</b></div>)}</div>
-        <a href={data.map.url} target="_blank" rel="noreferrer" className="btn btn-white btn-sm mt-24">{t('locationMap')} <ExternalLink size={14} /></a>
+        {data.map && <a href={data.map.url} target="_blank" rel="noreferrer" className="btn btn-white btn-sm mt-24">{t('locationMap')} <ExternalLink size={14} /></a>}
       </motion.div>
 
-      <div className="section-title"><h3>{t('regionalOffices')}</h3></div>
-      <motion.div className="grid grid-3" variants={stagger(0.06)} initial="hidden" animate="show">
-        {offices.regional.map((r) => (
-          <motion.div key={r.name} variants={fadeUp} className="card card-pad hover-lift">
-            <div className="row"><div className="icon-tile"><MapPin size={20} /></div><h3 style={{ fontSize: 18 }}>{r.name}</h3></div>
-            <div className="row small mt-16" style={{ color: r.overseasFingerprints ? 'var(--blue-700)' : 'var(--warn)' }}>
-              <Fingerprint size={15} /> {r.overseasFingerprints ? t('overseasFpYes') : t('overseasFpNo')}
-            </div>
+      {offices.regional && (
+        <>
+          <div className="section-title"><h3>{t('regionalOffices')}</h3></div>
+          <motion.div className="grid grid-3" variants={stagger(0.06)} initial="hidden" animate="show">
+            {offices.regional.map((r) => (
+              <motion.div key={r.name} variants={fadeUp} className="card card-pad hover-lift">
+                <div className="row"><div className="icon-tile"><MapPin size={20} /></div><h3 style={{ fontSize: 18 }}>{r.name}</h3></div>
+                <div className="row small mt-16" style={{ color: r.overseasFingerprints ? 'var(--blue-700)' : 'var(--warn)' }}>
+                  <Fingerprint size={15} /> {r.overseasFingerprints ? t('overseasFpYes') : t('overseasFpNo')}
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
-        ))}
-      </motion.div>
+        </>
+      )}
 
-      <div className="section-title"><h3>{t('workingHours')}</h3></div>
-      <div className="card table-wrap">
-        <table className="table">
-          <thead><tr><th>{t('colOffice')}</th><th>{t('colService')}</th><th>{t('colHours')}</th></tr></thead>
-          <tbody>{offices.hours.map((h) => <tr key={h.office + h.service}><td><b>{h.office}</b></td><td>{h.service}</td><td className="row gap-8"><Clock size={14} color="var(--blue-600)" /> {h.hours}</td></tr>)}</tbody>
-        </table>
-      </div>
-      <div className="alert alert-warn mt-16"><AlertTriangle size={18} /> {t('officesWarning')}</div>
+      {offices.hours && (
+        <>
+          <div className="section-title"><h3>{t('workingHours')}</h3></div>
+          <div className="card table-wrap">
+            <table className="table">
+              <thead><tr><th>{t('colOffice')}</th><th>{t('colService')}</th><th>{t('colHours')}</th></tr></thead>
+              <tbody>{offices.hours.map((h) => <tr key={h.office + h.service}><td><b>{h.office}</b></td><td>{h.service}</td><td className="row gap-8"><Clock size={14} color="var(--blue-600)" /> {h.hours}</td></tr>)}</tbody>
+            </table>
+          </div>
+        </>
+      )}
+      {offices.general && (
+        <div className="card card-pad mt-16">
+          <ul style={{ margin: 0, paddingLeft: 18, display: 'grid', gap: 8 }} className="small muted">
+            {offices.general.map((g) => <li key={g}>{g}</li>)}
+          </ul>
+        </div>
+      )}
+      {missionsNote && <div className="alert alert-warn mt-16"><AlertTriangle size={18} /> {t('officesWarning')}</div>}
     </Page>
   );
 }
 
-export function Contacts() {
+export function Contacts({ apiPrefix = '/passport', missionsNote = true }) {
   const { t, lang } = useLang();
-  const [data, error] = useData('/passport/contacts', lang);
+  const [data, error] = useData(`${apiPrefix}/contacts`, lang);
   if (error) return <Page><div className="alert alert-error">{error}</div></Page>;
   if (!data) return <Loader />;
 
@@ -119,7 +134,8 @@ export function Contacts() {
         ))}
       </motion.div>
       <p className="muted small mt-24">
-        {t('contactsOverseasNote')} <a className="link" href="https://mfa.gov.lk/sri-lanka-missions" target="_blank" rel="noreferrer">{t('footerMissions')}</a>. {t('source')}: {data.source.label} · {t('lastChecked')} {formatDate(data.lastChecked)}
+        {missionsNote && <>{t('contactsOverseasNote')} <a className="link" href="https://mfa.gov.lk/sri-lanka-missions" target="_blank" rel="noreferrer">{t('footerMissions')}</a>. </>}
+        {t('source')}: {data.source.label} · {t('lastChecked')} {formatDate(data.lastChecked)}
       </p>
     </Page>
   );

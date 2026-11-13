@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, BadgePlus, Baby, SearchX, Plane, MessageCircleQuestion, Route, Info, Clock, CalendarCheck, Calculator } from 'lucide-react';
+import { ArrowRight, BadgePlus, Baby, SearchX, Plane, MessageCircleQuestion, Route, Info, Clock, CalendarCheck, Calculator, BookOpen, Car } from 'lucide-react';
 import { api } from '../api.js';
 import { Page, ProgressBar, fadeUp, stagger, formatDate } from '../components/ui.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -30,7 +30,28 @@ export default function Overview() {
 
   return (
     <Page>
-      <motion.div className="welcome" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+      <div className="section-title" style={{ marginTop: 0 }}>
+        <h3>{t('chooseService')}</h3>
+        <span className="muted small">{t('chooseServiceSub')}</span>
+      </div>
+      <motion.div className="grid grid-2 mt-16" variants={stagger(0.08)} initial="hidden" animate="show">
+        <motion.div variants={fadeUp}>
+          <Link to="/app/cases" className="card action-card hover-lift" style={{ height: '100%' }}>
+            <div className="icon-tile solid"><BookOpen size={24} /></div>
+            <div><h4>{t('servicePassport')}</h4><p className="muted small mt-8">{t('servicePassportDesc')}</p></div>
+            <span className="go">{t('openService')} <ArrowRight size={15} /></span>
+          </Link>
+        </motion.div>
+        <motion.div variants={fadeUp}>
+          <Link to="/app/license" className="card action-card hover-lift" style={{ height: '100%' }}>
+            <div className="icon-tile solid"><Car size={24} /></div>
+            <div><h4>{t('serviceLicense')}</h4><p className="muted small mt-8">{t('serviceLicenseDesc')}</p></div>
+            <span className="go">{t('openService')} <ArrowRight size={15} /></span>
+          </Link>
+        </motion.div>
+      </motion.div>
+
+      <motion.div className="welcome mt-24" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
         <span className="pill pill-dark"><CalendarCheck size={13} /> {t('passportChecked')}</span>
         <h2 className="mt-16">{greet}, {user.fullName.split(' ')[0]} 👋</h2>
         <p>{t('overviewIntro')}</p>

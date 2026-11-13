@@ -30,11 +30,20 @@ export function useNav() {
       ],
     },
     {
+      label: t('serviceLicense'),
+      items: [
+        { to: '/app/license', icon: Car, label: t('navOverview'), end: true },
+        { to: '/app/license/cases', icon: BookOpen, label: t('navGuide') },
+        { to: '/app/license/fees', icon: Calculator, label: t('navFees') },
+        { to: '/app/license/offices', icon: Building2, label: t('navOffices') },
+        { to: '/app/license/contacts', icon: Phone, label: t('navContacts') },
+      ],
+    },
+    {
       label: t('navOtherGroup'),
       items: [
         { to: '/app/services/birth-certificate', icon: Baby, label: t('navBirth'), badge: t('soon') },
         { to: '/app/services/nic', icon: CreditCard, label: t('navNic'), badge: t('soon') },
-        { to: '/app/services/driving-licence', icon: Car, label: t('navDriving'), badge: t('soon') },
         { to: '/app/services/police-clearance', icon: ShieldCheck, label: t('navPolice'), badge: t('soon') },
       ],
     },

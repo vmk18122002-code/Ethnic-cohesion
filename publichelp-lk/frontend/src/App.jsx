@@ -11,6 +11,8 @@ import Fees from './pages/Fees.jsx';
 import { Forms, Offices, Contacts } from './pages/Info.jsx';
 import Profile from './pages/Profile.jsx';
 import { ComingSoon, NotFound } from './pages/Misc.jsx';
+import LicenseOverview from './pages/LicenseOverview.jsx';
+import LicenseFees from './pages/LicenseFees.jsx';
 
 export default function App() {
   return (
@@ -29,6 +31,14 @@ export default function App() {
         <Route path="offices" element={<Offices />} />
         <Route path="contacts" element={<Contacts />} />
         <Route path="profile" element={<Profile />} />
+
+        <Route path="license" element={<LicenseOverview />} />
+        <Route path="license/cases" element={<Cases apiPrefix="/license" basePath="/app/license/cases" />} />
+        <Route path="license/cases/:id" element={<CaseDetail apiPrefix="/license" journeysPrefix="/license/journeys" basePath="/app/license/cases" hotlineTel="1919" />} />
+        <Route path="license/fees" element={<LicenseFees />} />
+        <Route path="license/offices" element={<Offices apiPrefix="/license" missionsNote={false} />} />
+        <Route path="license/contacts" element={<Contacts apiPrefix="/license" missionsNote={false} />} />
+
         <Route path="services/:slug" element={<ComingSoon />} />
       </Route>
       <Route path="*" element={<NotFound />} />

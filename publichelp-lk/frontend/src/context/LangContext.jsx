@@ -47,9 +47,9 @@ const STRINGS = {
     servicesBody: 'Initial scope: 10–20 common government-service tasks, each tested against a human-verified answer key.',
     services: [
       { title: 'Passport services', text: '15 verified cases: new, urgent, child, lost, overseas, amendments and more.', live: true },
+      { title: 'Driving licence', text: "Learner's permit, new licence, renewal, lost licence and international permit.", live: true },
       { title: 'Birth certificate copy', text: 'Order a certified copy from the Registrar General.' },
       { title: 'National Identity Card', text: 'First NIC, replacement and corrections.' },
-      { title: 'Driving licence', text: 'Learner permits, renewals and international permits.' },
       { title: 'Police clearance', text: 'Certificates for overseas employment and migration.' },
       { title: 'Marriage registration', text: 'Registering a marriage and obtaining copies.' },
     ],
@@ -153,6 +153,12 @@ const STRINGS = {
 
     // Passport illustration chips
     artFormReady: 'Form K 35 A ready', artSourceChecked: 'Official source · checked', artStep: 'Step 4 of 10',
+
+    // Service picker
+    chooseService: 'Which service do you need?', chooseServiceSub: 'Pick one to get the official steps, documents and fees.',
+    servicePassport: 'Passport services', servicePassportDesc: '15 verified cases: new, urgent, child, lost, overseas, amendments and more.',
+    serviceLicense: 'Driving licence', serviceLicenseDesc: "Learner's permit, new licence, renewal, lost licence, foreign conversion and more.",
+    openService: 'Open', vehicleClassesTitle: 'Vehicle classes',
   },
 
   si: {
@@ -195,9 +201,9 @@ const STRINGS = {
     servicesBody: 'මූලික විෂය පථය: පොදු රජයේ-සේවා කාර්යයන් 10–20ක්, එක් එක් මනුෂ්‍ය-සත්‍යාපිත පිළිතුරු යතුරකට එරෙහිව පරීක්ෂා කර ඇත.',
     services: [
       { title: 'ගමන් බලපත්‍ර සේවා', text: 'සත්‍යාපිත අවස්ථා 15ක්: නව, හදිසි, ළමා, නැතිවූ, විදේශ, සංශෝධන සහ තවත්.', live: true },
+      { title: 'රියදුරු බලපත්‍රය', text: 'ඉගෙනුම් බලපත්‍රය, නව බලපත්‍රය, අලුත් කිරීම, නැතිවූ බලපත්‍රය සහ ජාත්‍යන්තර බලපත්‍රය.', live: true },
       { title: 'උප්පැන්න සහතික පිටපත', text: 'රෙජිස්ට්‍රාර් ජනරාල්ගෙන් සහතික කළ පිටපතක් ඇණවුම් කරන්න.' },
       { title: 'ජාතික හැඳුනුම්පත', text: 'පළමු NIC, ප්‍රතිස්ථාපනය සහ නිවැරදි කිරීම්.' },
-      { title: 'රියදුරු බලපත්‍රය', text: 'ඉගෙනුම් බලපත්‍ර, අලුත් කිරීම් සහ ජාත්‍යන්තර බලපත්‍ර.' },
       { title: 'පොලිස් නිශ්චිත සහතිකය', text: 'විදේශ රැකියා සහ සංක්‍රමණය සඳහා සහතික.' },
       { title: 'විවාහ ලියාපදිංචිය', text: 'විවාහයක් ලියාපදිංචි කිරීම සහ පිටපත් ලබාගැනීම.' },
     ],
@@ -289,6 +295,11 @@ const STRINGS = {
     goToGuide: 'ගමන් බලපත්‍ර මාර්ගෝපදේශයට යන්න', notFoundTitle: 'මෙම පිටුව නොපවතී.', backHome: 'මුල් පිටුවට',
 
     artFormReady: 'K 35 A පෝරමය සූදානම්', artSourceChecked: 'නිල මූලාශ්‍රය · පරීක්ෂා කළා', artStep: 'පියවර 4/10',
+
+    chooseService: 'ඔබට අවශ්‍ය සේවාව කුමක්ද?', chooseServiceSub: 'නිල පියවර, ලේඛන සහ ගාස්තු ලබාගැනීමට එකක් තෝරන්න.',
+    servicePassport: 'ගමන් බලපත්‍ර සේවා', servicePassportDesc: 'සත්‍යාපිත අවස්ථා 15ක්: නව, හදිසි, ළමා, නැතිවූ, විදේශ, සංශෝධන සහ තවත්.',
+    serviceLicense: 'රියදුරු බලපත්‍රය', serviceLicenseDesc: 'ඉගෙනුම් බලපත්‍රය, නව බලපත්‍රය, අලුත් කිරීම, නැතිවූ බලපත්‍රය, විදේශ පරිවර්තනය සහ තවත්.',
+    openService: 'විවෘත කරන්න', vehicleClassesTitle: 'වාහන පංති',
   },
 
   ta: {
@@ -331,9 +342,9 @@ const STRINGS = {
     servicesBody: 'ஆரம்ப நோக்கம்: 10–20 பொதுவான அரசு-சேவை பணிகள், ஒவ்வொன்றும் மனித-சரிபார்க்கப்பட்ட பதில் திறவுகோலுக்கு எதிராக சோதிக்கப்பட்டது.',
     services: [
       { title: 'கடவுச்சீட்டு சேவைகள்', text: '15 சரிபார்க்கப்பட்ட வழக்குகள்: புதிய, அவசர, குழந்தை, தொலைந்த, வெளிநாட்டு, திருத்தங்கள் மற்றும் பல.', live: true },
+      { title: 'ஓட்டுநர் உரிமம்', text: 'கற்றல் உரிமம், புதிய உரிமம், புதுப்பித்தல், தொலைந்த உரிமம் மற்றும் சர்வதேச உரிமம்.', live: true },
       { title: 'பிறப்பு சான்றிதழ் நகல்', text: 'பதிவாளர் ஜெனரலிடமிருந்து சான்றளிக்கப்பட்ட நகலை ஆர்டர் செய்யுங்கள்.' },
       { title: 'தேசிய அடையாள அட்டை', text: 'முதல் NIC, மாற்றீடு மற்றும் திருத்தங்கள்.' },
-      { title: 'ஓட்டுநர் உரிமம்', text: 'கற்றல் உரிமங்கள், புதுப்பித்தல்கள் மற்றும் சர்வதேச உரிமங்கள்.' },
       { title: 'போலீஸ் தெளிவு சான்றிதழ்', text: 'வெளிநாட்டு வேலைவாய்ப்பு மற்றும் குடியேற்றத்திற்கான சான்றிதழ்கள்.' },
       { title: 'திருமண பதிவு', text: 'திருமணத்தைப் பதிவு செய்தல் மற்றும் நகல்களைப் பெறுதல்.' },
     ],
@@ -425,6 +436,11 @@ const STRINGS = {
     goToGuide: 'கடவுச்சீட்டு வழிகாட்டிக்குச் செல்லவும்', notFoundTitle: 'இந்தப் பக்கம் இல்லை.', backHome: 'முகப்புக்குத் திரும்பு',
 
     artFormReady: 'K 35 A படிவம் தயார்', artSourceChecked: 'அதிகாரபூர்வ மூலம் · சரிபார்க்கப்பட்டது', artStep: 'படி 4/10',
+
+    chooseService: 'உங்களுக்கு எந்த சேவை தேவை?', chooseServiceSub: 'அதிகாரபூர்வ படிகள், ஆவணங்கள் மற்றும் கட்டணங்களைப் பெற ஒன்றைத் தேர்ந்தெடுக்கவும்.',
+    servicePassport: 'கடவுச்சீட்டு சேவைகள்', servicePassportDesc: '15 சரிபார்க்கப்பட்ட வழக்குகள்: புதிய, அவசர, குழந்தை, தொலைந்த, வெளிநாட்டு, திருத்தங்கள் மற்றும் பல.',
+    serviceLicense: 'ஓட்டுநர் உரிமம்', serviceLicenseDesc: 'கற்றல் உரிமம், புதிய உரிமம், புதுப்பித்தல், தொலைந்த உரிமம், வெளிநாட்டு மாற்றம் மற்றும் பல.',
+    openService: 'திற', vehicleClassesTitle: 'வாகன வகுப்புகள்',
   },
 };
 
