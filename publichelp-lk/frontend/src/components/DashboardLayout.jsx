@@ -42,7 +42,6 @@ export default function DashboardLayout() {
 
   const path = location.pathname;
   const meta = titles[path]
-    || (path.startsWith('/app/license/cases/') ? { title: t('caseWord'), group: t('serviceLicense') } : null)
     || (path.startsWith('/app/cases/') ? { title: t('caseWord'), group: t('navPassportGroup') } : null)
     || (path.startsWith('/app/services/') ? { title: t('comingSoon'), group: t('navOtherGroup') } : { title: 'PublicHelp LK', group: '' });
 

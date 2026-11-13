@@ -6,7 +6,7 @@ import { api } from '../api.js';
 import { Page } from '../components/ui.jsx';
 import { useLang } from '../context/LangContext.jsx';
 
-export default function Cases({ apiPrefix = '/passport', basePath = '/app/cases' }) {
+export default function Cases() {
   const { t, lang } = useLang();
   const [params, setParams] = useSearchParams();
   const category = params.get('category') || 'all';
@@ -16,11 +16,10 @@ export default function Cases({ apiPrefix = '/passport', basePath = '/app/cases'
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setCases(null);
-    Promise.all([api(`${apiPrefix}/cases?lang=${lang}`), api(`${apiPrefix}/meta?lang=${lang}`)])
+    Promise.all([api(`/passport/cases?lang=${lang}`), api(`/passport/meta?lang=${lang}`)])
       .then(([c, m]) => { setCases(c.cases); setCategories(m.categories); })
       .catch((e) => setError(e.message));
-  }, [lang, apiPrefix]);
+  }, [lang]);
 
   const tabs = [{ key: 'all', label: t('allCasesTab') }, ...categories];
   const shown = useMemo(() => (cases || []).filter((c) =>
@@ -55,7 +54,7 @@ export default function Cases({ apiPrefix = '/passport', basePath = '/app/cases'
           {shown.map((c, i) => (
             <motion.div key={c.id} layout initial={{ opacity: 0, scale: 0.94, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94 }}
               transition={{ duration: 0.35, delay: i * 0.03 }}>
-              <Link to={`${basePath}/${c.id}`} className="card case-card hover-lift action-card">
+              <Link to={`/app/cases/${c.id}`} className="card case-card hover-lift action-card">
                 <div className="row" style={{ justifyContent: 'space-between' }}>
                   <div className="case-num">{c.number}</div>
                   <span className="pill pill-muted">{c.duration}</span>

@@ -18,8 +18,7 @@ const QUICK = [
 ];
 
 const JOURNEY_ICONS = [MessageSquareText, Languages, Database, ListOrdered, Landmark];
-const SERVICE_ICONS = [BookOpen, Car, Baby, CreditCard, ShieldCheck, Scale];
-const SERVICE_LINKS = ['/app/cases', '/app/license', null, null, null, null];
+const SERVICE_ICONS = [BookOpen, Baby, CreditCard, Car, ShieldCheck, Scale];
 
 function Counter({ to, suffix = '' }) {
   const [n, setN] = useState(0);
@@ -202,7 +201,7 @@ export default function Landing() {
                     <div className={`icon-tile ${s.live ? 'solid' : ''}`}>{Icon && <Icon size={22} />}</div>
                     <h3>{s.title}</h3>
                     <p className="muted">{s.text}</p>
-                    {s.live && SERVICE_LINKS[i] && <Link to={SERVICE_LINKS[i]} className="btn btn-primary btn-sm mt-16" style={{ position: 'relative', zIndex: 1 }}>{t('openGuide')} <ArrowRight size={14} /></Link>}
+                    {s.live && <Link to="/app/cases" className="btn btn-primary btn-sm mt-16" style={{ position: 'relative', zIndex: 1 }}>{t('openGuide')} <ArrowRight size={14} /></Link>}
                   </div>
                 </Reveal>
               );

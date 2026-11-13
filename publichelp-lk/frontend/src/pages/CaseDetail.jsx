@@ -6,7 +6,7 @@ import { api } from '../api.js';
 import { Loader, Page, ProgressRing, SourceBox } from '../components/ui.jsx';
 import { useLang } from '../context/LangContext.jsx';
 
-export default function CaseDetail({ apiPrefix = '/passport', journeysPrefix = '/journeys', basePath = '/app/cases', hotlineTel = '1962' }) {
+export default function CaseDetail() {
   const { id } = useParams();
   const { t, lang } = useLang();
   const [data, setData] = useState(null);
@@ -19,7 +19,7 @@ export default function CaseDetail({ apiPrefix = '/passport', journeysPrefix = '
 
   useEffect(() => {
     setData(null);
-    Promise.all([api(`${apiPrefix}/cases/${id}?lang=${lang}`), api(`${journeysPrefix}/${id}?lang=${lang}`)])
+    Promise.all([api(`/passport/cases/${id}?lang=${lang}`), api(`/journeys/${id}?lang=${lang}`)])
       .then(([c, j]) => {
         setData(c.case);
         setSteps(j.journey?.steps || c.case.steps.map(() => false));
@@ -27,13 +27,13 @@ export default function CaseDetail({ apiPrefix = '/passport', journeysPrefix = '
       })
       .catch((e) => setError(e.message));
     return () => clearTimeout(timer.current);
-  }, [id, lang, apiPrefix, journeysPrefix]);
+  }, [id, lang]);
 
   const persist = (nextSteps, nextDocs) => {
     setSaving('saving');
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      api(`${journeysPrefix}/${id}?lang=${lang}`, { method: 'PUT', body: { steps: nextSteps, docs: nextDocs } })
+      api(`/journeys/${id}?lang=${lang}`, { method: 'PUT', body: { steps: nextSteps, docs: nextDocs } })
         .then(() => setSaving('saved'))
         .catch(() => setSaving('idle'));
     }, 450);
@@ -42,7 +42,7 @@ export default function CaseDetail({ apiPrefix = '/passport', journeysPrefix = '
   const toggleDoc = (i) => { const n = docs.map((v, k) => (k === i ? !v : v)); setDocs(n); persist(steps, n); };
   const reset = () => { const s = steps.map(() => false); const d = docs.map(() => false); setSteps(s); setDocs(d); persist(s, d); };
 
-  if (error) return <Page><div className="alert alert-error">{error}</div><Link to={basePath} className="btn btn-ghost mt-16"><ArrowLeft size={16} /> {t('backToCases')}</Link></Page>;
+  if (error) return <Page><div className="alert alert-error">{error}</div><Link to="/app/cases" className="btn btn-ghost mt-16"><ArrowLeft size={16} /> {t('backToCases')}</Link></Page>;
   if (!data) return <Loader />;
 
   const total = steps.length + docs.length;
@@ -51,7 +51,7 @@ export default function CaseDetail({ apiPrefix = '/passport', journeysPrefix = '
 
   return (
     <Page>
-      <Link to={basePath} className="row muted small" style={{ fontWeight: 600, marginBottom: 16 }}><ArrowLeft size={16} /> {t('backToCases')}</Link>
+      <Link to="/app/cases" className="row muted small" style={{ fontWeight: 600, marginBottom: 16 }}><ArrowLeft size={16} /> {t('backToCases')}</Link>
       <motion.div className="detail-hero" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <span className="pill pill-dark">{t('caseWord')} {data.number}</span>
         <h2>{data.title}</h2>
@@ -147,7 +147,7 @@ export default function CaseDetail({ apiPrefix = '/passport', journeysPrefix = '
           <div className="card card-pad" style={{ background: 'var(--ink)', color: '#fff', borderColor: 'var(--ink)' }}>
             <b>{t('notClearTitle')}</b>
             <p className="small" style={{ color: 'var(--muted-dark)', marginTop: 6 }}>{t('notClearBody')}</p>
-            <a href={`tel:${hotlineTel}`} className="btn btn-primary btn-block mt-16"><PhoneCall size={16} /> {hotlineTel === '1962' ? t('callHotline') : `${t('call')} ${hotlineTel}`}</a>
+            <a href="tel:1962" className="btn btn-primary btn-block mt-16"><PhoneCall size={16} /> {t('callHotline')}</a>
           </div>
         </aside>
       </div>
