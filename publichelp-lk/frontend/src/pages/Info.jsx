@@ -3,16 +3,18 @@ import { motion } from 'framer-motion';
 import { FileText, Download, ExternalLink, Building2, MapPin, Clock, AlertTriangle, Fingerprint, Phone, Mail, Printer, PhoneCall } from 'lucide-react';
 import { api } from '../api.js';
 import { Loader, Page, fadeUp, stagger, formatDate } from '../components/ui.jsx';
+import { useLang } from '../context/LangContext.jsx';
 
-function useData(path) {
+function useData(path, lang) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
-  useEffect(() => { api(path).then(setData).catch((e) => setError(e.message)); }, [path]);
+  useEffect(() => { setData(null); api(`${path}?lang=${lang}`).then(setData).catch((e) => setError(e.message)); }, [path, lang]);
   return [data, error];
 }
 
 export function Forms() {
-  const [data, error] = useData('/passport/forms');
+  const { t, lang } = useLang();
+  const [data, error] = useData('/passport/forms', lang);
   const [scope, setScope] = useState('all');
   if (error) return <Page><div className="alert alert-error">{error}</div></Page>;
   if (!data) return <Loader />;
@@ -22,15 +24,15 @@ export function Forms() {
     <Page>
       <div className="row wrap" style={{ justifyContent: 'space-between', gap: 16 }}>
         <div className="tabs">
-          {[['all', 'All forms'], ['Sri Lanka', 'In Sri Lanka'], ['Overseas', 'Overseas']].map(([k, l]) => (
+          {[['all', t('allForms')], ['Sri Lanka', t('inSriLanka')], ['Overseas', t('overseas')]].map(([k, l]) => (
             <button key={k} className={`tab ${scope === k ? 'active' : ''}`} onClick={() => setScope(k)}>
               {scope === k && <motion.span layoutId="form-tab" className="tab-bg" />}{l}
             </button>
           ))}
         </div>
-        <a href={data.downloads.url} target="_blank" rel="noreferrer" className="btn btn-primary"><Download size={16} /> Official downloads page</a>
+        <a href={data.downloads.url} target="_blank" rel="noreferrer" className="btn btn-primary"><Download size={16} /> {t('officialDownloads')}</a>
       </div>
-      <div className="alert alert-info mt-16"><Printer size={18} /> Downloaded forms should be laser printed on A4 paper. Forms are also free at the Head Office, Regional Offices, Divisional Secretariats and Overseas Missions.</div>
+      <div className="alert alert-info mt-16"><Printer size={18} /> {t('formsAlert')}</div>
       <motion.div className="grid grid-2 mt-24" variants={stagger(0.04)} initial="hidden" animate="show">
         {list.map((f) => (
           <motion.a key={f.name} variants={fadeUp} href={data.downloads.url} target="_blank" rel="noreferrer" className="card card-pad row gap-16 hover-lift" style={{ alignItems: 'flex-start' }}>
@@ -47,13 +49,14 @@ export function Forms() {
           </motion.a>
         ))}
       </motion.div>
-      <p className="muted small mt-24">Source: {data.downloads.label} · last checked {formatDate(data.lastChecked)}</p>
+      <p className="muted small mt-24">{t('source')}: {data.downloads.label} · {t('lastChecked')} {formatDate(data.lastChecked)}</p>
     </Page>
   );
 }
 
 export function Offices() {
-  const [data, error] = useData('/passport/offices');
+  const { t, lang } = useLang();
+  const [data, error] = useData('/passport/offices', lang);
   if (error) return <Page><div className="alert alert-error">{error}</div></Page>;
   if (!data) return <Loader />;
   const { offices } = data;
@@ -61,39 +64,40 @@ export function Offices() {
   return (
     <Page>
       <motion.div className="detail-hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="pill pill-dark"><Building2 size={13} /> Head Office</span>
+        <span className="pill pill-dark"><Building2 size={13} /> {t('headOffice')}</span>
         <h2>{offices.headOffice.name}</h2>
         <p className="row gap-8"><MapPin size={16} /> {offices.headOffice.address}</p>
         <div className="detail-facts">{offices.headOffice.notes.map((n) => <div key={n}><b>{n}</b></div>)}</div>
-        <a href={data.map.url} target="_blank" rel="noreferrer" className="btn btn-white btn-sm mt-24">Location map <ExternalLink size={14} /></a>
+        <a href={data.map.url} target="_blank" rel="noreferrer" className="btn btn-white btn-sm mt-24">{t('locationMap')} <ExternalLink size={14} /></a>
       </motion.div>
 
-      <div className="section-title"><h3>Regional offices</h3></div>
+      <div className="section-title"><h3>{t('regionalOffices')}</h3></div>
       <motion.div className="grid grid-3" variants={stagger(0.06)} initial="hidden" animate="show">
         {offices.regional.map((r) => (
           <motion.div key={r.name} variants={fadeUp} className="card card-pad hover-lift">
             <div className="row"><div className="icon-tile"><MapPin size={20} /></div><h3 style={{ fontSize: 18 }}>{r.name}</h3></div>
             <div className="row small mt-16" style={{ color: r.overseasFingerprints ? 'var(--blue-700)' : 'var(--warn)' }}>
-              <Fingerprint size={15} /> {r.overseasFingerprints ? 'Overseas-passport fingerprints listed' : 'Overseas fingerprints not listed — check first'}
+              <Fingerprint size={15} /> {r.overseasFingerprints ? t('overseasFpYes') : t('overseasFpNo')}
             </div>
           </motion.div>
         ))}
       </motion.div>
 
-      <div className="section-title"><h3>Working hours (weekdays)</h3></div>
+      <div className="section-title"><h3>{t('workingHours')}</h3></div>
       <div className="card table-wrap">
         <table className="table">
-          <thead><tr><th>Office</th><th>Service</th><th>Hours</th></tr></thead>
+          <thead><tr><th>{t('colOffice')}</th><th>{t('colService')}</th><th>{t('colHours')}</th></tr></thead>
           <tbody>{offices.hours.map((h) => <tr key={h.office + h.service}><td><b>{h.office}</b></td><td>{h.service}</td><td className="row gap-8"><Clock size={14} color="var(--blue-600)" /> {h.hours}</td></tr>)}</tbody>
         </table>
       </div>
-      <div className="alert alert-warn mt-16"><AlertTriangle size={18} /> The official page lists one-day hours for Regional Offices but also says one-day service is Head Office only. Call 1962 before travelling for an urgent application.</div>
+      <div className="alert alert-warn mt-16"><AlertTriangle size={18} /> {t('officesWarning')}</div>
     </Page>
   );
 }
 
 export function Contacts() {
-  const [data, error] = useData('/passport/contacts');
+  const { t, lang } = useLang();
+  const [data, error] = useData('/passport/contacts', lang);
   if (error) return <Page><div className="alert alert-error">{error}</div></Page>;
   if (!data) return <Loader />;
 
@@ -109,13 +113,13 @@ export function Contacts() {
               {c.note && <div className="small muted">{c.note}</div>}
               {c.email && c.tel && <a href={`mailto:${c.email}`} className="small link">{c.email}</a>}
             </div>
-            {c.tel && <a href={`tel:${c.tel}`} className={`btn ${c.primary ? 'btn-primary' : 'btn-dark'} btn-sm`}><PhoneCall size={14} /> Call</a>}
-            {!c.tel && c.email && <a href={`mailto:${c.email}`} className="btn btn-ghost btn-sm"><Mail size={14} /> Email</a>}
+            {c.tel && <a href={`tel:${c.tel}`} className={`btn ${c.primary ? 'btn-primary' : 'btn-dark'} btn-sm`}><PhoneCall size={14} /> {t('call')}</a>}
+            {!c.tel && c.email && <a href={`mailto:${c.email}`} className="btn btn-ghost btn-sm"><Mail size={14} /> {t('email')}</a>}
           </motion.div>
         ))}
       </motion.div>
       <p className="muted small mt-24">
-        Overseas? Contact your nearest <a className="link" href="https://mfa.gov.lk/sri-lanka-missions" target="_blank" rel="noreferrer">Sri Lankan Mission</a>. Source: {data.source.label} · last checked {formatDate(data.lastChecked)}
+        {t('contactsOverseasNote')} <a className="link" href="https://mfa.gov.lk/sri-lanka-missions" target="_blank" rel="noreferrer">{t('footerMissions')}</a>. {t('source')}: {data.source.label} · {t('lastChecked')} {formatDate(data.lastChecked)}
       </p>
     </Page>
   );

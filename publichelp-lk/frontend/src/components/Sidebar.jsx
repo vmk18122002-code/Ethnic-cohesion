@@ -6,46 +6,52 @@ import {
 } from 'lucide-react';
 import { Logo } from './ui.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useLang } from '../context/LangContext.jsx';
 
-export const NAV = [
-  {
-    label: 'Main',
-    items: [
-      { to: '/app', icon: LayoutDashboard, label: 'Overview', end: true },
-      { to: '/app/assistant', icon: MessageCircleQuestion, label: 'Ask the assistant' },
-    ],
-  },
-  {
-    label: 'Passport services',
-    items: [
-      { to: '/app/cases', icon: BookOpen, label: 'Passport guide' },
-      { to: '/app/journeys', icon: Route, label: 'My journeys' },
-      { to: '/app/fees', icon: Calculator, label: 'Fee calculator' },
-      { to: '/app/forms', icon: FileText, label: 'Forms & downloads' },
-      { to: '/app/offices', icon: Building2, label: 'Offices & hours' },
-      { to: '/app/contacts', icon: Phone, label: 'Contacts' },
-    ],
-  },
-  {
-    label: 'Other services',
-    items: [
-      { to: '/app/services/birth-certificate', icon: Baby, label: 'Birth certificate', badge: 'Soon' },
-      { to: '/app/services/nic', icon: CreditCard, label: 'National ID (NIC)', badge: 'Soon' },
-      { to: '/app/services/driving-licence', icon: Car, label: 'Driving licence', badge: 'Soon' },
-      { to: '/app/services/police-clearance', icon: ShieldCheck, label: 'Police clearance', badge: 'Soon' },
-    ],
-  },
-  {
-    label: 'Account',
-    items: [{ to: '/app/profile', icon: UserRound, label: 'Profile & settings' }],
-  },
-];
+export function useNav() {
+  const { t } = useLang();
+  return [
+    {
+      label: t('navMain'),
+      items: [
+        { to: '/app', icon: LayoutDashboard, label: t('navOverview'), end: true },
+        { to: '/app/assistant', icon: MessageCircleQuestion, label: t('navAssistant') },
+      ],
+    },
+    {
+      label: t('navPassportGroup'),
+      items: [
+        { to: '/app/cases', icon: BookOpen, label: t('navGuide') },
+        { to: '/app/journeys', icon: Route, label: t('navJourneys') },
+        { to: '/app/fees', icon: Calculator, label: t('navFees') },
+        { to: '/app/forms', icon: FileText, label: t('navForms') },
+        { to: '/app/offices', icon: Building2, label: t('navOffices') },
+        { to: '/app/contacts', icon: Phone, label: t('navContacts') },
+      ],
+    },
+    {
+      label: t('navOtherGroup'),
+      items: [
+        { to: '/app/services/birth-certificate', icon: Baby, label: t('navBirth'), badge: t('soon') },
+        { to: '/app/services/nic', icon: CreditCard, label: t('navNic'), badge: t('soon') },
+        { to: '/app/services/driving-licence', icon: Car, label: t('navDriving'), badge: t('soon') },
+        { to: '/app/services/police-clearance', icon: ShieldCheck, label: t('navPolice'), badge: t('soon') },
+      ],
+    },
+    {
+      label: t('navAccount'),
+      items: [{ to: '/app/profile', icon: UserRound, label: t('navProfile') }],
+    },
+  ];
+}
 
 export const initials = (name = '') => name.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('') || 'U';
 
 export default function Sidebar({ collapsed, setCollapsed, mobile, open, setOpen }) {
   const { user, logout } = useAuth();
+  const { t } = useLang();
   const navigate = useNavigate();
+  const nav = useNav();
   const mini = collapsed && !mobile;
 
   const signOut = () => { logout(); navigate('/signin'); };
@@ -73,7 +79,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobile, open, setOpen
       )}
 
       <nav className="sidebar-scroll">
-        {NAV.map((group, gi) => (
+        {nav.map((group, gi) => (
           <div key={group.label}>
             <div className="side-label" style={{ opacity: mini ? 0 : 1, height: mini ? 18 : undefined, padding: mini ? '8px 0' : undefined }}>
               {mini ? '' : group.label}
@@ -117,10 +123,10 @@ export default function Sidebar({ collapsed, setCollapsed, mobile, open, setOpen
               <div style={{ fontSize: 12, color: '#7d869c', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</div>
             </div>
           )}
-          {!mini && <button className="collapse-btn" onClick={signOut} title="Sign out" aria-label="Sign out"><LogOut size={15} /></button>}
+          {!mini && <button className="collapse-btn" onClick={signOut} title={t('signOut')} aria-label={t('signOut')}><LogOut size={15} /></button>}
         </div>
         {mini && (
-          <button className="collapse-btn" onClick={signOut} title="Sign out" aria-label="Sign out" style={{ margin: '10px auto 0' }}><LogOut size={15} /></button>
+          <button className="collapse-btn" onClick={signOut} title={t('signOut')} aria-label={t('signOut')} style={{ margin: '10px auto 0' }}><LogOut size={15} /></button>
         )}
       </div>
     </motion.aside>

@@ -83,12 +83,13 @@ export function Page({ children }) {
 }
 
 export function SourceBox({ source }) {
+  const { t } = useLang();
   if (!source) return null;
   return (
     <div className="source-box">
-      <div className="row" style={{ fontWeight: 700, marginBottom: 6 }}><CalendarCheck size={16} color="var(--blue-600)" /> Official source</div>
+      <div className="row" style={{ fontWeight: 700, marginBottom: 6 }}><CalendarCheck size={16} color="var(--blue-600)" /> {t('sourceLabel')}</div>
       <a href={source.url} target="_blank" rel="noreferrer">{source.label} <ExternalLink size={13} /></a>
-      <div className="muted small mt-8">Department of Immigration and Emigration · last checked {formatDate(source.lastChecked)}</div>
+      <div className="muted small mt-8">Department of Immigration and Emigration · {t('lastCheckedLabel')} {formatDate(source.lastChecked)}</div>
     </div>
   );
 }

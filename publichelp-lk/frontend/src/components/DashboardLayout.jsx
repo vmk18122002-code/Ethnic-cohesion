@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate, useLocation, useNavigate, useOutlet } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Menu, Search, Phone } from 'lucide-react';
-import Sidebar, { NAV } from './Sidebar.jsx';
+import Sidebar, { useNav } from './Sidebar.jsx';
 import { HelpFab, LangSwitch, Loader } from './ui.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useLang } from '../context/LangContext.jsx';
@@ -18,11 +18,10 @@ function useIsMobile(query = '(max-width: 1024px)') {
   return match;
 }
 
-const TITLES = Object.fromEntries(NAV.flatMap((g) => g.items.map((i) => [i.to, { title: i.label, group: g.label }])));
-
 export default function DashboardLayout() {
   const { user, loading } = useAuth();
   const { t } = useLang();
+  const nav = useNav();
   const location = useLocation();
   const navigate = useNavigate();
   const outlet = useOutlet();
@@ -33,6 +32,8 @@ export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
 
+  const titles = useMemo(() => Object.fromEntries(nav.flatMap((g) => g.items.map((i) => [i.to, { title: i.label, group: g.label }]))), [nav]);
+
   useEffect(() => { try { localStorage.setItem('phlk_sidebar', collapsed ? 'mini' : 'full'); } catch { /* ignore */ } }, [collapsed]);
   useEffect(() => { window.scrollTo({ top: 0 }); }, [location.pathname]);
 
@@ -40,9 +41,9 @@ export default function DashboardLayout() {
   if (!user) return <Navigate to="/signin" replace state={{ from: location.pathname + location.search }} />;
 
   const path = location.pathname;
-  const meta = TITLES[path]
-    || (path.startsWith('/app/cases/') ? { title: 'Passport case', group: 'Passport services' } : null)
-    || (path.startsWith('/app/services/') ? { title: 'Coming soon', group: 'Other services' } : { title: 'PublicHelp LK', group: '' });
+  const meta = titles[path]
+    || (path.startsWith('/app/cases/') ? { title: t('caseWord'), group: t('navPassportGroup') } : null)
+    || (path.startsWith('/app/services/') ? { title: t('comingSoon'), group: t('navOtherGroup') } : { title: 'PublicHelp LK', group: '' });
 
   const ask = (e) => {
     e.preventDefault();
@@ -63,7 +64,7 @@ export default function DashboardLayout() {
           </div>
           <form className="top-search" onSubmit={ask}>
             <Search size={16} />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask anything… e.g. passport for my baby" aria-label="Ask the assistant" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('topSearchPlaceholder')} aria-label={t('navAssistant')} />
           </form>
           <div className="row" style={{ marginLeft: mobile ? 'auto' : 0 }}>
             <span className="hide-sm"><LangSwitch light id="top-lang" /></span>

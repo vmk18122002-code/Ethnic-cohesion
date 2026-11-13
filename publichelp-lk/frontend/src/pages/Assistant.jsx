@@ -16,12 +16,12 @@ const SUGGESTIONS = [
 ];
 const LANG_NAME = { en: 'English', si: 'Sinhala', ta: 'Tamil' };
 
-function Answer({ data }) {
+function Answer({ data, t }) {
   if (!data.match) {
     return (
       <div className="card card-pad">
         <p>{data.message}</p>
-        <a href="tel:1962" className="btn btn-dark btn-sm mt-16"><PhoneCall size={15} /> Call 1962</a>
+        <a href="tel:1962" className="btn btn-dark btn-sm mt-16"><PhoneCall size={15} /> {t('callHotline')}</a>
       </div>
     );
   }
@@ -29,11 +29,11 @@ function Answer({ data }) {
   return (
     <div className="card card-pad">
       <div className="row wrap gap-8">
-        <span className="pill"><Languages size={12} /> Detected: {LANG_NAME[data.language]}</span>
-        <span className={`pill ${data.confidence === 'high' ? '' : 'pill-warn'}`}><Target size={12} /> {data.confidence === 'high' ? 'Clear match' : 'Please confirm this is your task'}</span>
+        <span className="pill"><Languages size={12} /> {t('detected')}: {LANG_NAME[data.language]}</span>
+        <span className={`pill ${data.confidence === 'high' ? '' : 'pill-warn'}`}><Target size={12} /> {data.confidence === 'high' ? t('clearMatch') : t('confirmTask')}</span>
       </div>
-      <div className="muted small mt-16">It looks like you want to:</div>
-      <h3 style={{ fontSize: 20, marginTop: 4 }}>Case {m.number}: {m.title}</h3>
+      <div className="muted small mt-16">{t('looksLikeYouWant')}</div>
+      <h3 style={{ fontSize: 20, marginTop: 4 }}>{t('caseWord')} {m.number}: {m.title}</h3>
       <p className="muted mt-8">{m.summary}</p>
       <div className="row wrap gap-8 mt-16">
         <span className="pill pill-muted"><MapPin size={12} /> {m.where}</span>
@@ -45,16 +45,16 @@ function Answer({ data }) {
           <motion.li key={s} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.1 }}>{s}</motion.li>
         ))}
       </ol>
-      {m.totalSteps > m.steps.length && <div className="muted small mt-8">+ {m.totalSteps - m.steps.length} more steps</div>}
+      {m.totalSteps > m.steps.length && <div className="muted small mt-8">+ {m.totalSteps - m.steps.length} {t('moreSteps')}</div>}
       <div className="row wrap mt-24" style={{ justifyContent: 'space-between' }}>
-        <Link to={`/app/cases/${m.id}`} className="btn btn-primary btn-sm">Open full guide & checklist <ArrowRight size={14} /></Link>
+        <Link to={`/app/cases/${m.id}`} className="btn btn-primary btn-sm">{t('openFullGuide')} <ArrowRight size={14} /></Link>
         <a href={m.source.url} target="_blank" rel="noreferrer" className="small link row gap-4">
-          {m.source.label} · checked {formatDate(m.source.lastChecked)} <ExternalLink size={12} />
+          {m.source.label} · {t('lastChecked')} {formatDate(m.source.lastChecked)} <ExternalLink size={12} />
         </a>
       </div>
       {data.alternatives?.length > 0 && (
         <div className="mt-16 small muted">
-          Not quite? Try: {data.alternatives.map((a, i) => (
+          {t('notQuite')} {data.alternatives.map((a, i) => (
             <span key={a.id}>{i > 0 && ' · '}<Link className="link" to={`/app/cases/${a.id}`}>{a.title}</Link></span>
           ))}
         </div>
@@ -109,9 +109,9 @@ export default function Assistant() {
               <motion.div className="icon-tile dark" style={{ width: 72, height: 72, borderRadius: 22, margin: '0 auto' }} animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }}>
                 <Bot size={34} />
               </motion.div>
-              <h2 style={{ fontSize: 26, marginTop: 20 }}>What do you need help with?</h2>
+              <h2 style={{ fontSize: 26, marginTop: 20 }}>{t('assistantHeadline')}</h2>
               <p className="muted mt-8" style={{ maxWidth: 520, margin: '8px auto 0' }}>
-                Describe your situation in Sinhala, Tamil or English. I only answer from verified official sources — if I'm not sure, I'll tell you who to call.
+                {t('assistantIntro')}
               </p>
               <div className="row wrap gap-8 mt-24" style={{ justifyContent: 'center' }}>
                 {SUGGESTIONS.map((s, i) => (
@@ -132,7 +132,7 @@ export default function Assistant() {
                 {m.role === 'user' ? m.text : (
                   <>
                     <div className="bot-avatar"><Bot size={20} /></div>
-                    <div className="bot-body"><Answer data={m.data} /></div>
+                    <div className="bot-body"><Answer data={m.data} t={t} /></div>
                   </>
                 )}
               </motion.div>
@@ -148,7 +148,7 @@ export default function Assistant() {
         </div>
         <form className="chat-input" onSubmit={(e) => { e.preventDefault(); ask(input); }}>
           <input value={input} onChange={(e) => setInput(e.target.value)} placeholder={t('askPlaceholder')} aria-label="Your question" />
-          <button className="btn btn-primary" disabled={busy || !input.trim()}><Send size={16} /> Ask</button>
+          <button className="btn btn-primary" disabled={busy || !input.trim()}><Send size={16} /> {t('askBtn')}</button>
         </form>
       </div>
     </Page>

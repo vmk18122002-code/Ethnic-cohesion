@@ -4,9 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Check, AlertTriangle, Info, ChevronDown, PhoneCall, RotateCcw, CheckCircle2, Loader2 } from 'lucide-react';
 import { api } from '../api.js';
 import { Loader, Page, ProgressRing, SourceBox } from '../components/ui.jsx';
+import { useLang } from '../context/LangContext.jsx';
 
 export default function CaseDetail() {
   const { id } = useParams();
+  const { t, lang } = useLang();
   const [data, setData] = useState(null);
   const [steps, setSteps] = useState([]);
   const [docs, setDocs] = useState([]);
@@ -17,7 +19,7 @@ export default function CaseDetail() {
 
   useEffect(() => {
     setData(null);
-    Promise.all([api(`/passport/cases/${id}`), api(`/journeys/${id}`)])
+    Promise.all([api(`/passport/cases/${id}?lang=${lang}`), api(`/journeys/${id}?lang=${lang}`)])
       .then(([c, j]) => {
         setData(c.case);
         setSteps(j.journey?.steps || c.case.steps.map(() => false));
@@ -25,13 +27,13 @@ export default function CaseDetail() {
       })
       .catch((e) => setError(e.message));
     return () => clearTimeout(timer.current);
-  }, [id]);
+  }, [id, lang]);
 
   const persist = (nextSteps, nextDocs) => {
     setSaving('saving');
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      api(`/journeys/${id}`, { method: 'PUT', body: { steps: nextSteps, docs: nextDocs } })
+      api(`/journeys/${id}?lang=${lang}`, { method: 'PUT', body: { steps: nextSteps, docs: nextDocs } })
         .then(() => setSaving('saved'))
         .catch(() => setSaving('idle'));
     }, 450);
@@ -40,7 +42,7 @@ export default function CaseDetail() {
   const toggleDoc = (i) => { const n = docs.map((v, k) => (k === i ? !v : v)); setDocs(n); persist(steps, n); };
   const reset = () => { const s = steps.map(() => false); const d = docs.map(() => false); setSteps(s); setDocs(d); persist(s, d); };
 
-  if (error) return <Page><div className="alert alert-error">{error}</div><Link to="/app/cases" className="btn btn-ghost mt-16"><ArrowLeft size={16} /> Back to cases</Link></Page>;
+  if (error) return <Page><div className="alert alert-error">{error}</div><Link to="/app/cases" className="btn btn-ghost mt-16"><ArrowLeft size={16} /> {t('backToCases')}</Link></Page>;
   if (!data) return <Loader />;
 
   const total = steps.length + docs.length;
@@ -49,15 +51,15 @@ export default function CaseDetail() {
 
   return (
     <Page>
-      <Link to="/app/cases" className="row muted small" style={{ fontWeight: 600, marginBottom: 16 }}><ArrowLeft size={16} /> All passport cases</Link>
+      <Link to="/app/cases" className="row muted small" style={{ fontWeight: 600, marginBottom: 16 }}><ArrowLeft size={16} /> {t('backToCases')}</Link>
       <motion.div className="detail-hero" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <span className="pill pill-dark">Case {data.number}</span>
+        <span className="pill pill-dark">{t('caseWord')} {data.number}</span>
         <h2>{data.title}</h2>
         <p>{data.summary}</p>
         <div className="detail-facts">
-          <div><span>Where</span><b>{data.where}</b></div>
-          <div><span>Fee</span><b>{data.fee}</b></div>
-          <div><span>Time</span><b>{data.duration}</b></div>
+          <div><span>{t('factWhere')}</span><b>{data.where}</b></div>
+          <div><span>{t('factFee')}</span><b>{data.fee}</b></div>
+          <div><span>{t('factTime')}</span><b>{data.duration}</b></div>
         </div>
       </motion.div>
 
@@ -69,8 +71,8 @@ export default function CaseDetail() {
 
           <section className="card card-pad">
             <div className="section-title" style={{ marginTop: 0 }}>
-              <h3>Step-by-step</h3>
-              <span className="muted small">Tap a step when you've done it</span>
+              <h3>{t('stepByStep')}</h3>
+              <span className="muted small">{t('tapStep')}</span>
             </div>
             <div className="timeline">
               {data.steps.map((s, i) => (
@@ -95,8 +97,8 @@ export default function CaseDetail() {
 
           <section className="card card-pad">
             <div className="section-title" style={{ marginTop: 0 }}>
-              <h3>Documents checklist</h3>
-              <span className="muted small">Bring originals + photocopies</span>
+              <h3>{t('docsChecklist')}</h3>
+              <span className="muted small">{t('bringOriginals')}</span>
             </div>
             {data.documents.map((d, i) => (
               <div key={d.name} className={`doc-item ${docs[i] ? 'done' : ''}`} onClick={() => toggleDoc(i)} role="checkbox" aria-checked={!!docs[i]} tabIndex={0}
@@ -109,7 +111,7 @@ export default function CaseDetail() {
 
           {data.special && (
             <section className="card card-pad">
-              <div className="section-title" style={{ marginTop: 0 }}><h3>Special situations</h3></div>
+              <div className="section-title" style={{ marginTop: 0 }}><h3>{t('specialSituations')}</h3></div>
               {data.special.map((s, i) => (
                 <div key={s.situation} style={{ borderBottom: i < data.special.length - 1 ? '1px solid var(--line)' : 0 }}>
                   <button onClick={() => setOpenSpecial(openSpecial === i ? null : i)} className="row" style={{ width: '100%', border: 0, background: 'none', padding: '14px 4px', justifyContent: 'space-between', fontWeight: 600, textAlign: 'left' }} aria-expanded={openSpecial === i}>
@@ -133,19 +135,19 @@ export default function CaseDetail() {
 
         <aside className="sticky-col">
           <div className="card card-pad" style={{ textAlign: 'center' }}>
-            <ProgressRing value={pct} />
-            <div className="mt-16" style={{ fontWeight: 700 }}>{done} of {total} done</div>
+            <ProgressRing value={pct} label={t('done')} />
+            <div className="mt-16" style={{ fontWeight: 700 }}>{done} {t('of')} {total} {t('done')}</div>
             <div className="row small muted mt-8" style={{ justifyContent: 'center', minHeight: 20 }}>
-              {saving === 'saving' && <><Loader2 size={14} className="spin" style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>}
-              {saving === 'saved' && <><CheckCircle2 size={14} color="var(--blue-600)" /> Saved to your account</>}
+              {saving === 'saving' && <><Loader2 size={14} className="spin" style={{ animation: 'spin 1s linear infinite' }} /> {t('saving')}</>}
+              {saving === 'saved' && <><CheckCircle2 size={14} color="var(--blue-600)" /> {t('savedToAccount')}</>}
             </div>
-            <button className="btn btn-ghost btn-sm mt-16" onClick={reset}><RotateCcw size={14} /> Reset progress</button>
+            <button className="btn btn-ghost btn-sm mt-16" onClick={reset}><RotateCcw size={14} /> {t('resetProgress')}</button>
           </div>
           <SourceBox source={data.source} />
           <div className="card card-pad" style={{ background: 'var(--ink)', color: '#fff', borderColor: 'var(--ink)' }}>
-            <b>Not clear?</b>
-            <p className="small" style={{ color: 'var(--muted-dark)', marginTop: 6 }}>If anything is missing or unclear, the Department is the final authority.</p>
-            <a href="tel:1962" className="btn btn-primary btn-block mt-16"><PhoneCall size={16} /> Call 1962</a>
+            <b>{t('notClearTitle')}</b>
+            <p className="small" style={{ color: 'var(--muted-dark)', marginTop: 6 }}>{t('notClearBody')}</p>
+            <a href="tel:1962" className="btn btn-primary btn-block mt-16"><PhoneCall size={16} /> {t('callHotline')}</a>
           </div>
         </aside>
       </div>

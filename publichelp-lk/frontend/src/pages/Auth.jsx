@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useLang } from '../context/LangContext.jsx';
 
 function AuthLayout({ children }) {
+  const { t } = useLang();
   return (
     <motion.div className="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
       <div className="auth-art">
@@ -17,9 +18,9 @@ function AuthLayout({ children }) {
         <Link to="/" style={{ position: 'relative' }}><Logo /></Link>
         <div style={{ position: 'relative' }}><PassportArt compact /></div>
         <motion.div style={{ position: 'relative' }} variants={stagger(0.1)} initial="hidden" animate="show">
-          <motion.h2 variants={fadeUp}>Your passport journey, <span className="gradient-text">saved and guided.</span></motion.h2>
+          <motion.h2 variants={fadeUp}>{t('authHeroTitle')} <span className="gradient-text">{t('authHeroGradient')}</span></motion.h2>
           <div className="points">
-            {['Save progress on every step and document', 'Personal fee calculator and checklists', 'Sinhala, Tamil and English'].map((p) => (
+            {t('authPoints').map((p) => (
               <motion.div key={p} variants={fadeUp}><CheckCircle2 size={18} color="var(--blue-400)" /> {p}</motion.div>
             ))}
           </div>
@@ -31,9 +32,10 @@ function AuthLayout({ children }) {
 }
 
 function Field({ label, optional, icon: Icon, error, children }) {
+  const { t } = useLang();
   return (
     <motion.div className="field" variants={fadeUp}>
-      <label>{label} {optional && <span className="opt">(optional)</span>}</label>
+      <label>{label} {optional && <span className="opt">({t('optional').toLowerCase()})</span>}</label>
       <div className="input-wrap">
         {Icon && <Icon size={18} />}
         {children}
@@ -62,9 +64,10 @@ function FormError({ message }) {
 }
 
 function TopRow() {
+  const { t } = useLang();
   return (
     <div className="auth-top">
-      <Link to="/" className="row muted small" style={{ fontWeight: 600 }}><ArrowLeft size={16} /> Home</Link>
+      <Link to="/" className="row muted small" style={{ fontWeight: 600 }}><ArrowLeft size={16} /> {t('homeWord')}</Link>
       <LangSwitch light id="auth-lang" />
     </div>
   );
@@ -101,14 +104,14 @@ export function SignIn() {
     <AuthLayout>
       <TopRow />
       <motion.form className="auth-form" onSubmit={submit} variants={stagger(0.07)} initial="hidden" animate="show" noValidate>
-        <motion.h1 variants={fadeUp}>Welcome back</motion.h1>
-        <motion.p variants={fadeUp} className="muted" style={{ marginBottom: 26 }}>Sign in to continue your passport journey.</motion.p>
+        <motion.h1 variants={fadeUp}>{t('welcomeBack')}</motion.h1>
+        <motion.p variants={fadeUp} className="muted" style={{ marginBottom: 26 }}>{t('signInSub')}</motion.p>
         <FormError message={error} />
-        <Field label="Email address" icon={Mail}>
+        <Field label={t('emailAddress')} icon={Mail}>
           <input className="input" type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         </Field>
-        <Field label="Password" icon={Lock}>
-          <input className="input" type={show ? 'text' : 'password'} autoComplete="current-password" placeholder="Your password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+        <Field label={t('password')} icon={Lock}>
+          <input className="input" type={show ? 'text' : 'password'} autoComplete="current-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
           <button type="button" className="input-action" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? <EyeOff size={18} /> : <Eye size={18} />}</button>
         </Field>
         <motion.div variants={fadeUp}>
@@ -116,7 +119,7 @@ export function SignIn() {
             {busy ? <span className="spinner" style={{ width: 18, height: 18, borderColor: 'rgba(255,255,255,.3)', borderTopColor: '#fff' }} /> : <>{t('signIn')} <ArrowRight size={17} /></>}
           </button>
         </motion.div>
-        <motion.div variants={fadeUp} className="divider">New to PublicHelp LK?</motion.div>
+        <motion.div variants={fadeUp} className="divider">{t('newHere')}</motion.div>
         <motion.div variants={fadeUp}>
           <Link to="/signup" state={location.state} className="btn btn-ghost btn-lg btn-block">{t('signUp')}</Link>
         </motion.div>
@@ -133,7 +136,6 @@ function strength(pw) {
   if (/[^A-Za-z0-9]/.test(pw) || pw.length >= 12) s++;
   return s;
 }
-const STRENGTH = [['', '#e4e8f0'], ['Weak', '#dc2626'], ['Fair', '#f59e0b'], ['Good', '#3b82f6'], ['Strong', '#1d4ed8']];
 
 export function SignUp() {
   const { register, user } = useAuth();
@@ -149,6 +151,7 @@ export function SignUp() {
 
   if (user) return <Navigate to={from} replace />;
 
+  const STRENGTH = [['', '#e4e8f0'], [t('strengthWeak'), '#dc2626'], [t('strengthFair'), '#f59e0b'], [t('strengthGood'), '#3b82f6'], [t('strengthStrong'), '#1d4ed8']];
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
   const s = strength(form.password);
 
@@ -176,30 +179,30 @@ export function SignUp() {
     <AuthLayout>
       <TopRow />
       <motion.form className="auth-form" onSubmit={submit} variants={stagger(0.05)} initial="hidden" animate="show" noValidate>
-        <motion.h1 variants={fadeUp}>Create your account</motion.h1>
-        <motion.p variants={fadeUp} className="muted" style={{ marginBottom: 24 }}>Free. Takes less than a minute.</motion.p>
+        <motion.h1 variants={fadeUp}>{t('createAccountTitle')}</motion.h1>
+        <motion.p variants={fadeUp} className="muted" style={{ marginBottom: 24 }}>{t('createAccountSub')}</motion.p>
         <FormError message={error} />
-        <Field label="Full name" icon={User} error={fields.fullName}>
-          <input className={`input ${fields.fullName ? 'invalid' : ''}`} autoComplete="name" placeholder="As on your NIC" value={form.fullName} onChange={set('fullName')} />
+        <Field label={t('fullName')} icon={User} error={fields.fullName}>
+          <input className={`input ${fields.fullName ? 'invalid' : ''}`} autoComplete="name" placeholder={t('asOnNic')} value={form.fullName} onChange={set('fullName')} />
         </Field>
-        <Field label="Email address" icon={Mail} error={fields.email}>
+        <Field label={t('emailAddress')} icon={Mail} error={fields.email}>
           <input className={`input ${fields.email ? 'invalid' : ''}`} type="email" autoComplete="email" placeholder="you@example.com" value={form.email} onChange={set('email')} />
         </Field>
         <div className="grid grid-2" style={{ gap: 12 }}>
-          <Field label="NIC number" optional icon={CreditCard} error={fields.nic}>
+          <Field label={t('nicNumber')} optional icon={CreditCard} error={fields.nic}>
             <input className={`input ${fields.nic ? 'invalid' : ''}`} placeholder="199912345678" value={form.nic} onChange={set('nic')} />
           </Field>
-          <Field label="Mobile" optional icon={Smartphone} error={fields.phone}>
+          <Field label={t('mobile')} optional icon={Smartphone} error={fields.phone}>
             <input className={`input ${fields.phone ? 'invalid' : ''}`} type="tel" autoComplete="tel" placeholder="+94 77 123 4567" value={form.phone} onChange={set('phone')} />
           </Field>
         </div>
-        <Field label="Preferred language" icon={Languages}>
+        <Field label={t('preferredLanguage')} icon={Languages}>
           <select className="input" value={form.preferredLang} onChange={set('preferredLang')}>
             <option value="en">English</option><option value="si">සිංහල (Sinhala)</option><option value="ta">தமிழ் (Tamil)</option>
           </select>
         </Field>
-        <Field label="Password" icon={Lock} error={fields.password}>
-          <input className={`input ${fields.password ? 'invalid' : ''}`} type={show ? 'text' : 'password'} autoComplete="new-password" placeholder="At least 8 characters, letters + numbers" value={form.password} onChange={set('password')} />
+        <Field label={t('password')} icon={Lock} error={fields.password}>
+          <input className={`input ${fields.password ? 'invalid' : ''}`} type={show ? 'text' : 'password'} autoComplete="new-password" value={form.password} onChange={set('password')} />
           <button type="button" className="input-action" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? <EyeOff size={18} /> : <Eye size={18} />}</button>
         </Field>
         {form.password && (
@@ -208,12 +211,12 @@ export function SignUp() {
             <div className="small" style={{ color: STRENGTH[s][1], fontWeight: 600, marginTop: 4 }}>{STRENGTH[s][0]}</div>
           </motion.div>
         )}
-        <Field label="Confirm password" icon={Lock} error={fields.confirm}>
-          <input className={`input ${fields.confirm ? 'invalid' : ''}`} type={show ? 'text' : 'password'} autoComplete="new-password" placeholder="Repeat password" value={form.confirm} onChange={set('confirm')} />
+        <Field label={t('confirmPassword')} icon={Lock} error={fields.confirm}>
+          <input className={`input ${fields.confirm ? 'invalid' : ''}`} type={show ? 'text' : 'password'} autoComplete="new-password" value={form.confirm} onChange={set('confirm')} />
         </Field>
         <motion.label variants={fadeUp} className="checkbox-row">
           <input type="checkbox" checked={form.agree} onChange={set('agree')} />
-          <span>I understand PublicHelp LK is a guidance service, not an official government website, and I will confirm details with the Department.</span>
+          <span>{t('consentText')}</span>
         </motion.label>
         {fields.agree && <div className="field-error" style={{ marginTop: 6 }}>{fields.agree}</div>}
         <motion.div variants={fadeUp}>
@@ -222,7 +225,7 @@ export function SignUp() {
           </button>
         </motion.div>
         <motion.p variants={fadeUp} className="muted small" style={{ textAlign: 'center', marginTop: 18 }}>
-          Already have an account? <Link to="/signin" state={location.state} className="link">{t('signIn')}</Link>
+          {t('alreadyHaveAccount')} <Link to="/signin" state={location.state} className="link">{t('signIn')}</Link>
         </motion.p>
       </motion.form>
     </AuthLayout>

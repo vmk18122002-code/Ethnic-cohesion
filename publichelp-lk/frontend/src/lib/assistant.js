@@ -1,6 +1,7 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import { cases, sources, LAST_CHECKED } from '../data/passport.js';
+import { localizeCase } from './localize.js';
 
 // Task-oriented guidance (proposal steps 1-5):
 // 1 ask a real-life question -> 2 detect goal + language -> 3 retrieve official evidence
@@ -74,17 +75,23 @@ export async function askAssistant(question, userId) {
     createdAt: serverTimestamp(),
   }).catch(() => { /* logging is best-effort */ });
 
+  const NO_MATCH = {
+    en: 'We could not find confirmed official guidance for this question. To be safe, please contact the Department of Immigration and Emigration on 1962.',
+    si: 'මෙම ප්‍රශ්නයට තහවුරු කළ නිල මගපෙන්වීමක් සොයාගැනීමට නොහැකි විය. ආරක්ෂිත වීම සඳහා, කරුණාකර ආගමන හා විගමන දෙපාර්තමේන්තුව 1962 අංකයෙන් අමතන්න.',
+    ta: 'இந்த கேள்விக்கு உறுதிப்படுத்தப்பட்ட அதிகாரபூர்வ வழிகாட்டுதலை நாங்கள் கண்டறிய முடியவில்லை. பாதுகாப்பாக இருக்க, குடிவரவு மற்றும் குடியகல்வு திணைக்களத்தை 1962 இல் தொடர்பு கொள்ளவும்.',
+  };
+
   if (top.s === 0) {
     return {
       language,
       match: null,
-      message: 'We could not find confirmed official guidance for this question. To be safe, please contact the Department of Immigration and Emigration on 1962.',
+      message: NO_MATCH[language] || NO_MATCH.en,
       lastChecked: LAST_CHECKED,
     };
   }
 
   const confidence = top.s >= 6 && top.s >= second.s * 1.5 ? 'high' : 'medium';
-  const c = top.c;
+  const c = localizeCase(top.c, language);
   return {
     language,
     confidence,
@@ -100,6 +107,6 @@ export async function askAssistant(question, userId) {
       totalSteps: c.steps.length,
       source: { ...sources[c.source], lastChecked: LAST_CHECKED },
     },
-    alternatives: ranked.slice(1, 3).filter((r) => r.s > 0).map((r) => ({ id: r.c.id, number: r.c.number, title: r.c.title })),
+    alternatives: ranked.slice(1, 3).filter((r) => r.s > 0).map((r) => ({ id: r.c.id, number: r.c.number, title: localizeCase(r.c, language).title })),
   };
 }
